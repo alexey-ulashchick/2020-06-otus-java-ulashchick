@@ -2,18 +2,17 @@ package ru.otus.collections;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
-import java.util.function.Consumer;
-
 
 public class MyList<E> implements List<E> {
 
-  private final static int DEFAULT_SIZE = 8;
-  private final static int GROW_FACTOR = 2;
-  private final static float SHRINK_FACTOR = 0.25f;
+  private static final int DEFAULT_SIZE = 8;
+  private static final int GROW_FACTOR = 2;
+  private static final float SHRINK_FACTOR = 0.25f;
 
   /**
    * Internal array for holding elements of the list. Will grow and shrink according to {@value
@@ -70,16 +69,6 @@ public class MyList<E> implements List<E> {
 
         return (E) array[i++];
       }
-
-      @Override
-      public void remove() {
-
-      }
-
-      @Override
-      public void forEachRemaining(Consumer<? super E> action) {
-
-      }
     };
   }
 
@@ -88,9 +77,14 @@ public class MyList<E> implements List<E> {
     return Arrays.copyOf(array, size);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <T> T[] toArray(T[] a) {
-    throw new UnsupportedOperationException("Not implemented yet.");
+    for (int i = 0; i < a.length; i++) {
+      a[i] = (T) array[i];
+    }
+
+    return a;
   }
 
   @Override
@@ -104,16 +98,6 @@ public class MyList<E> implements List<E> {
     return true;
   }
 
-  private void growArray() {
-    int newSize = this.array.length * GROW_FACTOR;
-    array = Arrays.copyOf(array, newSize);
-  }
-
-  private void shrinkArray() {
-    int newSize = this.array.length / GROW_FACTOR;
-    array = Arrays.copyOf(array, newSize);
-  }
-
   @Override
   public boolean addAll(Collection<? extends E> c) {
     c.forEach(this::add);
@@ -122,33 +106,33 @@ public class MyList<E> implements List<E> {
 
   @Override
   public boolean remove(Object o) {
+    // throw new UnsupportedOperationException("Not implemented yet.");
     return false;
   }
 
   @Override
   public boolean containsAll(Collection<?> c) {
-    return false;
+    throw new UnsupportedOperationException("Not implemented yet.");
   }
-
 
   @Override
   public boolean addAll(int index, Collection<? extends E> c) {
-    return false;
+    throw new UnsupportedOperationException("Not implemented yet.");
   }
 
   @Override
   public boolean removeAll(Collection<?> c) {
-    return false;
+    throw new UnsupportedOperationException("Not implemented yet.");
   }
 
   @Override
   public boolean retainAll(Collection<?> c) {
-    return false;
+    throw new UnsupportedOperationException("Not implemented yet.");
   }
 
   @Override
   public void clear() {
-
+    throw new UnsupportedOperationException("Not implemented yet.");
   }
 
   @Override
@@ -173,12 +157,29 @@ public class MyList<E> implements List<E> {
 
   @Override
   public void add(int index, E element) {
-
+    throw new UnsupportedOperationException("Not implemented yet.");
   }
 
   @Override
   public E remove(int index) {
-    return null;
+    if (index < 0 || index >= this.size) {
+      throw new IndexOutOfBoundsException();
+    }
+
+    E result = (E) array[index];
+
+    while (index < this.size - 1) {
+      array[index] = array[index + 1];
+      index++;
+    }
+
+    size--;
+
+    if (size <= this.array.length * SHRINK_FACTOR) {
+      this.shrinkArray();
+    }
+
+    return result;
   }
 
   @Override
@@ -207,16 +208,83 @@ public class MyList<E> implements List<E> {
 
   @Override
   public ListIterator<E> listIterator() {
-    return null;
+    return new ListIterator<E>() {
+      private int index = 0;
+      private Integer prevIndex = null;
+
+      @Override
+      public boolean hasNext() {
+        return index < size;
+      }
+
+      @Override
+      public E next() {
+        prevIndex = index;
+        return (E) array[index++];
+      }
+
+      @Override
+      public boolean hasPrevious() {
+        return index >= 0 && size > 0;
+      }
+
+      @Override
+      public E previous() {
+        prevIndex = index;
+        return (E) array[index--];
+      }
+
+      @Override
+      public int nextIndex() {
+        throw new UnsupportedOperationException("Not implemented yet.");
+      }
+
+      @Override
+      public int previousIndex() {
+        throw new UnsupportedOperationException("Not implemented yet.");
+      }
+
+      @Override
+      public void remove() {
+        throw new UnsupportedOperationException("Not implemented yet.");
+      }
+
+      @Override
+      public void set(E e) {
+        array[prevIndex] = e;
+      }
+
+      @Override
+      public void add(E e) {
+        throw new UnsupportedOperationException("Not implemented yet.");
+      }
+    };
   }
 
   @Override
   public ListIterator<E> listIterator(int index) {
-    return null;
+    throw new UnsupportedOperationException("Not implemented yet.");
   }
 
   @Override
   public List<E> subList(int fromIndex, int toIndex) {
-    return null;
+    throw new UnsupportedOperationException("Not implemented yet.");
+  }
+
+  @Override
+  public void sort(Comparator<? super E> c) {
+    Arrays.sort((E[]) array, 0, size, c);
+  }
+
+  /** Increases array size in GROW_FACTOR times. */
+  private void growArray() {
+    int newSize = this.array.length * GROW_FACTOR;
+    array = Arrays.copyOf(array, newSize);
+  }
+
+  /** Shrinks array. */
+  private void shrinkArray() {
+    int newSize = this.array.length / GROW_FACTOR;
+    array = Arrays.copyOf(array, newSize);
   }
 }

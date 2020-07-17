@@ -1,71 +1,49 @@
 package ru.otus.collections;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.List;
-import java.util.NoSuchElementException;
-import org.junit.Before;
 import org.junit.Test;
 
 public class MyListTests {
 
-  public final List<Integer> list = new MyList<>();
+  public final List<Integer> myList = new MyList<>();
 
-  @Before
-  public void fillTheList() {
-    list.add(0);
-    list.add(1);
-    list.add(2);
+  @Test
+  public void testAddAll() {
+    Collections.addAll(myList, 4, 5, 1, 2, 3, 9, 4, 1, 3, 2, 4, 5, 1, 2, 3, 9, 4, 1, 3, 2);
+
+    assertThat(myList)
+        .containsExactly(4, 5, 1, 2, 3, 9, 4, 1, 3, 2, 4, 5, 1, 2, 3, 9, 4, 1, 3, 2)
+        .inOrder();
   }
 
   @Test
-  public void testSize() {
-    assertThat(list).hasSize(3);
+  public void testSorting() {
+    assertThat(myList).isEmpty();
+
+    Collections.addAll(myList, 4, 5, 1, 2, 3, 9, 4, 1, 3, 2, 4, 5, 1, 2, 3, 9, 4, 1, 3, 2);
+    assertThat(myList).hasSize(20);
+
+    Collections.sort(myList);
+    assertThat(myList).isInOrder();
   }
 
   @Test
-  public void testIsEmpty() {
-    MyList<Integer> emptyList = new MyList<>();
+  public void testCopying() {
+    Collections.addAll(myList, 4, 5, 1, 2, 3, 9, 4, 1, 3, 2, 4, 5, 1, 2, 3, 9, 4, 1, 3, 2);
+    List<Integer> destination = new MyList<>();
 
-    assertThat(emptyList).isEmpty();
-    assertThat(list).isNotEmpty();
-  }
+    for (int i = 0; i < myList.size(); i++) {
+      destination.add(null);
+    }
 
-  @Test
-  public void testIterator() {
-    Iterator<Integer> iterator = list.iterator();
+    assertThat(destination).hasSize(myList.size());
+    assertThat(destination).containsNoneIn(myList);
 
-    assertThat(iterator.hasNext()).isTrue();
-    assertThat(iterator.next()).isEqualTo(0);
+    Collections.copy(destination, myList);
 
-    assertThat(iterator.hasNext()).isTrue();
-    assertThat(iterator.next()).isEqualTo(1);
-
-    assertThat(iterator.hasNext()).isTrue();
-    assertThat(iterator.next()).isEqualTo(2);
-
-    assertThat(iterator.hasNext()).isFalse();
-
-    Exception exception = assertThrows(NoSuchElementException.class, iterator::next);
-
-    assertThat(exception).hasMessageThat().contains("No more elements in the list");
-  }
-
-  @Test
-  public void indexOf() {
-    list.add(1);
-
-    assertThat(list).hasSize(4);
-    assertThat(list.indexOf(1)).isEqualTo(1);
-    assertThat(list.lastIndexOf(1)).isEqualTo(3);
-  }
-
-  @Test
-  public void testToArrayWithNoParameters() {
-    Object[] objects = list.toArray();
-
-    assertThat(objects).isEqualTo(new Object[]{0, 1, 2});
+    assertThat(destination).containsExactlyElementsIn(myList).inOrder();
   }
 }

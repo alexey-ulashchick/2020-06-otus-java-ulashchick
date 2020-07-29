@@ -13,6 +13,7 @@ public class MyList<E> implements List<E> {
   private static final int DEFAULT_SIZE = 8;
   private static final int GROW_FACTOR = 2;
   private static final float SHRINK_FACTOR = 0.25f;
+  private static final String EXCEPTION_MESSAGE = "Not implemented yet.";
 
   /**
    * Internal array for holding elements of the list. Will grow and shrink according to {@value
@@ -106,33 +107,32 @@ public class MyList<E> implements List<E> {
 
   @Override
   public boolean remove(Object o) {
-    // throw new UnsupportedOperationException("Not implemented yet.");
     return false;
   }
 
   @Override
   public boolean containsAll(Collection<?> c) {
-    throw new UnsupportedOperationException("Not implemented yet.");
+    throw new UnsupportedOperationException();
   }
 
   @Override
   public boolean addAll(int index, Collection<? extends E> c) {
-    throw new UnsupportedOperationException("Not implemented yet.");
+    throw new UnsupportedOperationException(EXCEPTION_MESSAGE);
   }
 
   @Override
   public boolean removeAll(Collection<?> c) {
-    throw new UnsupportedOperationException("Not implemented yet.");
+    throw new UnsupportedOperationException(EXCEPTION_MESSAGE);
   }
 
   @Override
   public boolean retainAll(Collection<?> c) {
-    throw new UnsupportedOperationException("Not implemented yet.");
+    throw new UnsupportedOperationException(EXCEPTION_MESSAGE);
   }
 
   @Override
   public void clear() {
-    throw new UnsupportedOperationException("Not implemented yet.");
+    throw new UnsupportedOperationException(EXCEPTION_MESSAGE);
   }
 
   @Override
@@ -157,7 +157,7 @@ public class MyList<E> implements List<E> {
 
   @Override
   public void add(int index, E element) {
-    throw new UnsupportedOperationException("Not implemented yet.");
+    throw new UnsupportedOperationException(EXCEPTION_MESSAGE);
   }
 
   @Override
@@ -219,6 +219,9 @@ public class MyList<E> implements List<E> {
 
       @Override
       public E next() {
+        if (!hasNext()) {
+          throw new NoSuchElementException();
+        }
         prevIndex = index;
         return (E) array[index++];
       }
@@ -236,17 +239,17 @@ public class MyList<E> implements List<E> {
 
       @Override
       public int nextIndex() {
-        throw new UnsupportedOperationException("Not implemented yet.");
+        throw new UnsupportedOperationException(EXCEPTION_MESSAGE);
       }
 
       @Override
       public int previousIndex() {
-        throw new UnsupportedOperationException("Not implemented yet.");
+        throw new UnsupportedOperationException(EXCEPTION_MESSAGE);
       }
 
       @Override
       public void remove() {
-        throw new UnsupportedOperationException("Not implemented yet.");
+        throw new UnsupportedOperationException(EXCEPTION_MESSAGE);
       }
 
       @Override
@@ -256,19 +259,19 @@ public class MyList<E> implements List<E> {
 
       @Override
       public void add(E e) {
-        throw new UnsupportedOperationException("Not implemented yet.");
+        throw new UnsupportedOperationException(EXCEPTION_MESSAGE);
       }
     };
   }
 
   @Override
   public ListIterator<E> listIterator(int index) {
-    throw new UnsupportedOperationException("Not implemented yet.");
+    throw new UnsupportedOperationException(EXCEPTION_MESSAGE);
   }
 
   @Override
   public List<E> subList(int fromIndex, int toIndex) {
-    throw new UnsupportedOperationException("Not implemented yet.");
+    throw new UnsupportedOperationException(EXCEPTION_MESSAGE);
   }
 
   @Override
